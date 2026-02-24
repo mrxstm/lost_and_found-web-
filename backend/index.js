@@ -8,7 +8,7 @@ import locationRoute from "./routes/locationRoutes.js";
 import cookieParser from 'cookie-parser';
 import dotenv from "dotenv"
 import cors from "cors";
-import { createUploadsFolder } from "./utils/helper.js";
+import { createUploadsFolders } from "./utils/helper.js";
 
 
 dotenv.config();
@@ -18,13 +18,14 @@ const app = express();
 const port = 5000;
 
 connection();
-createUploadsFolder();
+createUploadsFolders();
 
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads/items', express.static('uploads/items'));
+app.use('/uploads/profiles', express.static('uploads/profiles'));
 
 app.use(cors({
     origin: "http://localhost:5173", 

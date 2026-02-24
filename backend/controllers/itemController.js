@@ -141,7 +141,7 @@ export const addItemReport = async(req,res) => {
         const college_id = req.user.college_id;
 
         // req.files contains uploaded files
-        const image_urls = req.files?.map((file) => `/uploads/${file.filename}`) || [];
+        const image_urls = req.files?.map((file) => `/uploads/items/${file.filename}`) || [];
 
         //validations
         if(!itemName || itemName.trim() === "") return res.status(400).json({message: "Item name is required"});
