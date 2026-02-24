@@ -3,39 +3,33 @@ import useApi from '../../../../hooks/useAPI';
 import searchIcon from '../../../../assets/images/greysearch.png';
 import FilterDropdown from './FilterDropdown';
 
-function Filters({ filters, onFilterChange }) {
+function Filters({ onFilterChange }) {
   const { callApi } = useApi();
 
   // Local states
-  const [query, setQuery] = useState(filters.query || '');
-  const [category, setCategory] = useState(filters.category || 'all');
-  const [status, setStatus] = useState(filters.status || 'all');
-  const [location, setLocation] = useState(filters.location || 'all');
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('all');
+  const [status, setStatus] = useState('all');
+  const [location, setLocation] = useState('all');
   const [locations, setLocations] = useState([]);
 
-  // Sync local state when parent filters change (for page reload / back navigation)
-  useEffect(() => {
-    setQuery(filters.query || '');
-    setCategory(filters.category || 'all');
-    setStatus(filters.status || 'all');
-    setLocation(filters.location || 'all');
-  }, [filters]);
+  // Debounced query state
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
 
   // Fetch locations once on mount
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const res = await callApi('GET', '/locations');
+        const res = await callApi('GET', '/locations', {});
         setLocations(res.locations || []);
       } catch (err) {
         console.error('Failed to fetch locations:', err.message);
       }
     };
     fetchLocations();
-  }, [callApi]);
+  }, []);
 
-  // Debounced query state
-  const [debouncedQuery, setDebouncedQuery] = useState(query);
+  // Debounce search query
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
@@ -44,7 +38,7 @@ function Filters({ filters, onFilterChange }) {
     return () => clearTimeout(handler);
   }, [query]);
 
-  // Notify parent whenever any filter changes
+  // Notify parent whenever any filter changes (including debounced query)
   useEffect(() => {
     onFilterChange({
       query: debouncedQuery,
@@ -53,11 +47,6 @@ function Filters({ filters, onFilterChange }) {
       location,
     });
   }, [debouncedQuery, category, status, location]);
-
-  // Dropdown handlers (immediate update for better UX)
-  const handleCategoryChange = (e) => setCategory(e.target.value);
-  const handleStatusChange = (e) => setStatus(e.target.value);
-  const handleLocationChange = (e) => setLocation(e.target.value);
 
   return (
     <div className="flex flex-col h-64 bg-[#1F2937]">
@@ -75,10 +64,11 @@ function Filters({ filters, onFilterChange }) {
 
       {/* Dropdowns */}
       <div className="flex items-center justify-around">
+        {/* Category */}
         <FilterDropdown
           label="Category"
           value={category}
-          onChange={handleCategoryChange}
+          onChange={(e) => setCategory(e.target.value)}
           options={[
             { value: 'all', label: 'All' },
             { value: 'Electronics', label: 'Electronics' },
@@ -90,10 +80,11 @@ function Filters({ filters, onFilterChange }) {
           ]}
         />
 
+        {/* Status */}
         <FilterDropdown
           label="Status"
           value={status}
-          onChange={handleStatusChange}
+          onChange={(e) => setStatus(e.target.value)}
           options={[
             { value: 'all', label: 'All' },
             { value: 'lost', label: 'Lost' },
@@ -101,10 +92,11 @@ function Filters({ filters, onFilterChange }) {
           ]}
         />
 
+        {/* Location */}
         <FilterDropdown
           label="Location"
           value={location}
-          onChange={handleLocationChange}
+          onChange={(e) => setLocation(e.target.value)}
           options={[
             { value: 'all', label: 'All' },
             ...locations.map((loc) => ({ value: loc.name, label: loc.name })),
