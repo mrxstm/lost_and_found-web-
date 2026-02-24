@@ -39,6 +39,7 @@ function ItemList({ items, loading, error }) {
                                         location={item.Location?.name}
                                         date={item.date?.substring(0,10)}
                                         fromPage="search"
+                                        status={item.status}
                                     />
                                 );
                             })

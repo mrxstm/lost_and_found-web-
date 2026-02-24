@@ -2,10 +2,27 @@ import locationimg from '../assets/images/location.png';
 import calendar from '../assets/images/dates.png';
 import { Link } from 'react-router-dom';
 
-function ProductCard({id, item_name, image, location, date, fromPage}) {
+function ProductCard({id, item_name, image, location, date, fromPage, status}) {
+
+       const colors = {
+            lost: { bg: 'bg-red-500', text: 'text-white' },
+            found: { bg: 'bg-green-400', text: 'text-black' },
+        };
+    
+        const { bg, text } = colors[status] || { bg: 'bg-gray-500', text: 'text-white' };
+
     return (
         <Link to={`/item/${id}`} state={{from: fromPage}}> 
-            <div className="bg-[#1F2937] h-[480px] w-[380px] rounded-xl shadow-sm cursor-pointer">
+            <div className="bg-[#1F2937] h-[480px] w-[380px] rounded-xl shadow-sm cursor-pointer relative">
+
+               {fromPage == "search" && (
+                <div
+                    className={`absolute top-3 left-3 px-3 py-1 rounded-full text-sm font-semibold ${bg} ${text} z-10`}
+                >
+                    {status}
+                </div>
+                )}
+
                 <img 
                     src={image} 
                     alt={item_name} 
