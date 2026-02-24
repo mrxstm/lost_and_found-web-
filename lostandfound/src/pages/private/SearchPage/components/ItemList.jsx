@@ -1,28 +1,11 @@
-import { toast } from "react-toastify";
 import ProductCard from "../../../../components/ProductCard";
-import useApi from "../../../../hooks/useAPI";
-import { useEffect, useState } from "react";
 
-function ItemList() {
 
-    const{error, loading, callApi} = useApi();
-    const[items, setItems] = useState([]);
+function ItemList({ items, loading, error }) {
+    
+
     const totalItems = items.length;
 
-    //fetch all items
-    const fetchItems = async() => {
-        try {
-            const res = await callApi("GET", "/item/", {});
-            setItems(res.data);    
-                   
-        } catch (e) {
-            toast.error(e.message || "Failed to fetch items")
-        }
-    }
-
-    useEffect(()=> {
-        fetchItems();
-    }, []);
     return(
         <div className="mt-12 bg-[#111827] ">
             <h3 className="text-[#9ca3af] ml-14">Found <b className="text-white">{totalItems}</b> items</h3>

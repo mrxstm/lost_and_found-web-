@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { Item, Location, Users } from "../models/association.js";
+import { Item, Location, Users, College } from "../models/association.js";
 
 export const getAllItem = async (req,res) => {
     try {
@@ -172,3 +172,58 @@ export const addItemReport = async(req,res) => {
         res.status(500).send({message: e.message});
     }
 }
+
+
+export const searchItems = async (req, res) => {
+  try {
+    const { query, category, status, location } = req.query;
+
+    let where = {};
+
+    if (query) {
+      where[Op.or] = [
+        { itemName: { [Op.iLike]: `%${query}%` } },
+        { itemDescription: { [Op.iLike]: `%${query}%` } },
+      ];
+    }
+
+    if (category && category.toLowerCase() !== "all") {
+      where.category = category;
+    }
+
+    if (status && status.toLowerCase() !== "all") {
+      where.status = status;
+    }
+
+    if (location && location.toLowerCase() !== "all") {
+      // We will filter via included Location
+      where["$Location.name$"] = location; 
+    }
+
+    const items = await Item.findAll({
+      where,
+      include: [
+        {
+          model: Location,
+          as: "Location",
+          attributes: ["id", "name", "college_id"],
+        },
+        {
+          model: Users,
+          as: "reporter",
+          attributes: ["id", "fullname", "username", "email"],
+        },
+        {
+          model: College,
+          attributes: ["id", "name"],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    return res.json({ data: items, message: "Items fetched successfully" });
+  } catch (error) {
+    console.error("Search & Filter error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
