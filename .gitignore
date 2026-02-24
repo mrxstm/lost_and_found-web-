@@ -1,0 +1,21 @@
+# React frontend
+lostandfound/node_modules/
+lostandfound/build/
+
+# Backend
+backend/node_modules/
+
+# Environment files
+lostandfound/.env
+backend/.env
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
