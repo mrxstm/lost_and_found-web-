@@ -38,6 +38,7 @@ function ItemPage() {
                 <ReportedBy
                   reporter={itemData?.reporter}
                   stats={itemData?.stats}
+                  itemData={itemData} 
                 />
             </div>
         </div>
