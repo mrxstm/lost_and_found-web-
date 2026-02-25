@@ -31,5 +31,11 @@ const uploadProfileImage = multer({
   fileFilter,
   limits: { fileSize: 1024 * 1024 * 5 },
 });
+const uploadProofImage = multer({
+    storage: createStorage("uploads/proofs"),
+    fileFilter,
+    limits: { fileSize: 1024 * 1024 * 5 },
+});
 
-export { uploadItemImages, uploadProfileImage };
+
+export { uploadItemImages, uploadProfileImage, uploadProofImage };

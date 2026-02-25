@@ -1,13 +1,15 @@
-import { Users, Item, Location } from "../models/association.js";
+import { Users, Item, Location, Claim } from "../models/association.js";
 import fs from "fs";
 import path from "path";
 import bcrypt from "bcrypt";
+import { Op } from "sequelize";
+
 
 
 export const getAllUsers = async (req, res) => {
     try {
         const users = await Users.findAll({
-            where: { college_id: req.user.college_id },
+            where: { college_id: req.user.college_id, id: { [Op.ne]: req.user.id }  },
             attributes: ["id", "fullname", "username", "email", "phone_no", "gender", "college_id"]
         });
         res.status(200).json(users);
@@ -94,6 +96,55 @@ export const deleteUser = async (req, res) => {
 
         await user.destroy();
         res.status(200).json({ message: "User deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getAllClaims = async (req, res) => {
+    try {
+        const claims = await Claim.findAll({
+            include: [
+                {
+                    model: Item,
+                    where: { college_id: req.user.college_id },  // college specific
+                    attributes: ["id", "itemName", "status"]
+                },
+                {
+                    model: Users,
+                    as: "claimant",
+                    attributes: ["id", "fullname", "email"]
+                }
+            ],
+            order: [["createdAt", "DESC"]]
+        });
+        res.status(200).json({ data: claims, message: "Claims fetched successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const adminDeleteClaim = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const claim = await Claim.findOne({
+            where: { id },
+            include: [{
+                model: Item,
+                where: { college_id: req.user.college_id }
+            }]
+        });
+
+        if (!claim) return res.status(404).json({ message: "Claim not found" });
+
+        // delete proof image from disk if exists
+        if (claim.proof_image) {
+            const fullPath = path.join(process.cwd(), claim.proof_image);
+            if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+        }
+
+        await claim.destroy();
+        res.status(200).json({ message: "Claim deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
