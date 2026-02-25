@@ -3,26 +3,25 @@ import { Item, Location, Users, College } from "../models/association.js";
 import fs from "fs";
 import path from "path";
 
-export const getAllItem = async (req,res) => {
+
+export const getAllItem = async (req, res) => {
     try {
         const user_id = req.user.id;
-        
         const items = await Item.findAll({
             where: {
-                reported_by: {[Op.ne]: user_id}, // exclude current user's reports (ne means not equal)
+                reported_by: { [Op.ne]: user_id },
                 status: ["lost", "found"],
-                college_id: req.user.college_id
+                college_id: req.user.college_id,
+                isApproved: true  
             },
             order: [["createdAt", "DESC"]],
-            include: [
-                {model : Location}
-            ]
-        })
-        res.status(200).send({data: items, message: "Items fetched successfully"})
-    } catch(e) {
+            include: [{ model: Location }]
+        });
+        res.status(200).send({ data: items, message: "Items fetched successfully" });
+    } catch (e) {
         res.status(500).send(e.message);
     }
-}
+};
 
 export const getItemById = async (req,res) => {
     try {
@@ -62,9 +61,9 @@ export const getItemById = async (req,res) => {
 
 
 
-export const getItemByStatus = async (req,res) => {
+export const getItemByStatus = async (req, res) => {
     try {
-        const {status} = req.params;
+        const { status } = req.params;
         const user_id = req.user.id;
 
         if (!["lost", "found"].includes(status)) {
@@ -76,19 +75,14 @@ export const getItemByStatus = async (req,res) => {
                 status,
                 reported_by: user_id
             },
-            include: [
-                {
-                    model: Location,
-                    attributes: ["id", "name"]
-                }
-            ],
+            include: [{ model: Location, attributes: ["id", "name"] }],
             order: [["createdAt", "DESC"]]
-        })
-        res.status(200).send({data: items, message: "Items fetched successfully"})
-    } catch(e) {
+        });
+        res.status(200).send({ data: items, message: "Items fetched successfully" });
+    } catch (e) {
         res.status(500).send(e.message);
     }
-}
+};
 
 export const updateItem = async (req, res) => {
     try {
@@ -201,15 +195,15 @@ export const addItemReport = async(req,res) => {
         res.status(500).send({message: e.message});
     }
 }
-
 export const searchItems = async (req, res) => {
   try {
     const { query, category, status, location } = req.query;
 
-    // Base filters: hide own items + only same college
+    // Base filters: hide own items + only same college + only approved items
     let where = {
       reported_by: { [Op.ne]: req.user.id },
       college_id: req.user.college_id,
+      isApproved: true, 
     };
 
     // Text search

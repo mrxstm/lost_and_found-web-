@@ -51,6 +51,10 @@ export const Item = sequelize.define("Items", {
     college_id: {
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    isApproved: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false  // all new reports need admin approval
     }
 
 })

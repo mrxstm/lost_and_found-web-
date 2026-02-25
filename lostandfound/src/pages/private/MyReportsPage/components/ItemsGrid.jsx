@@ -18,6 +18,7 @@ function ItemsGrid({items, onDelete}) {
                         date={item.date?.substring(0,10)}
                         fromPage="myReports"
                         onDelete={onDelete}
+                        isApproved={item.isApproved} 
                     />
                 })
             }

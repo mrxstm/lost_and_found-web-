@@ -15,8 +15,12 @@ const ReportItem = React.lazy(() => import("../pages/private/ReportItemPage/Repo
 const Product = React.lazy(() => import("../pages/private/ProductPage/Product"));
 const Item = React.lazy(() => import("../pages/private/ItemPage/ItemPage"));
 const EditItem = React.lazy(() => import("../pages/private/EditItemPage/EditItem"));
+
+// admin pages
 const Dashboard = React.lazy(() => import("../pages/admin/childrenpages/Dashboard"));
 const Users = React.lazy(() => import("../pages/admin/childrenpages/Users"));
+const AdminPendingItems = React.lazy(() => import("../pages/admin/childrenpages/AdminPendingItems"));
+const AdminLocations = React.lazy(() => import("../pages/admin/childrenpages/AdminLocations"));
 
 export const AppRoutes = ({openSignup}) => {
   return (
@@ -107,6 +111,28 @@ export const AppRoutes = ({openSignup}) => {
             element={
               <Suspense fallback={<div className="text-center">Loading User...</div>}>
                 <Users/>
+              </Suspense>
+            }
+          />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route
+            path="/admin/pending-items"
+            element={
+              <Suspense fallback={<div className="text-center">Loading Dashboard...</div>}>
+                <AdminPendingItems/>
+              </Suspense>
+            }
+          />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route
+            path="/admin/locations"
+            element={
+              <Suspense fallback={<div className="text-center">Loading Dashboard...</div>}>
+                <AdminLocations/>
               </Suspense>
             }
           />
