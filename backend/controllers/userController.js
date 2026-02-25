@@ -241,3 +241,18 @@ export const editProfile = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
+
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.id; 
+
+    await Users.destroy({
+      where: { id: userId }
+    });
+
+    res.json({ message: "Account deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete account" });
+  }
+};
