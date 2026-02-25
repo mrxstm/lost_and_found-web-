@@ -5,10 +5,12 @@ import itemRoute from "./routes/itemRoute.js";
 import authRoute from "./routes/authRoute.js";
 import adminRoute from "./routes/adminRoutes.js";
 import locationRoute from "./routes/locationRoutes.js";
+import statsRoute from "./routes/statRoute.js"
 import cookieParser from 'cookie-parser';
 import dotenv from "dotenv"
 import cors from "cors";
 import { createUploadsFolders } from "./utils/helper.js";
+
 
 
 dotenv.config();
@@ -38,6 +40,7 @@ app.use("/api/auth", authRoute)
 app.use("/api/admin", adminRoute)
 app.use("/api/item", itemRoute)
 app.use("/api/locations", locationRoute)
+app.use("/api/stats", statsRoute);
 
 app.listen(port, ()=> {
     console.log("Server running");

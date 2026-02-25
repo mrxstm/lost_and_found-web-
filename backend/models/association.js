@@ -46,6 +46,7 @@ Item.belongsTo(Location, {
 // College and Item association
 College.hasMany(Item, {
   foreignKey: "college_id",
+  onDelete: "CASCADE"
 });
 
 Item.belongsTo(College, {
