@@ -67,11 +67,7 @@ function App() {
           )
         }
 
-          <AppRoutes
-           openSignup={() => {
-              setShowLogin(false);
-              setShowSignup(true);
-          }}/>
+          <AppRoutes/>
     
 
     

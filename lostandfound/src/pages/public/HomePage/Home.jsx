@@ -7,16 +7,14 @@ import Footer from "./components/Footer";
 
 
 
-function Home({openSignup}) {
+function Home() {
     return(
         <div>
             <HeroSection/>
             <StatCardSection/>
             <RecentLostItems/>
             <HowItWorks/>
-            <Footer
-                openSignup={openSignup}
-            />
+            <Footer/>
         </div>
     );
 } 
