@@ -14,14 +14,18 @@ const Profile = React.lazy(() => import("../pages/private/ProfilePage/Profile"))
 const ReportItem = React.lazy(() => import("../pages/private/ReportItemPage/ReportItem"));
 const Product = React.lazy(() => import("../pages/private/ProductPage/Product"));
 const Item = React.lazy(() => import("../pages/private/ItemPage/ItemPage"));
+const EditItem = React.lazy(() => import("../pages/private/EditItemPage/EditItem"));
 const Dashboard = React.lazy(() => import("../pages/admin/childrenpages/Dashboard"));
 const Users = React.lazy(() => import("../pages/admin/childrenpages/Users"));
 
-export const AppRoutes = () => {
+export const AppRoutes = ({openSignup}) => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={
+        <Home     
+          openSignup={openSignup}
+      />} />
 
       {/* Protected user routes */}
       <Route element={<PrivateRoutes />}>
@@ -65,11 +69,20 @@ export const AppRoutes = () => {
             </Suspense>
           }
         />
-          <Route
+        <Route
           path="/item/:id"
           element={
             <Suspense fallback={<div className="text-center">Loading Item...</div>}>
               <Item />
+            </Suspense>
+          }
+        />
+
+         <Route
+          path="/item/edit/:id"
+          element={
+            <Suspense fallback={<div className="text-center">Loading Item...</div>}>
+              <EditItem />
             </Suspense>
           }
         />

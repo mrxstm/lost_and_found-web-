@@ -12,23 +12,13 @@ function ReportedBy({reporter, stats}) {
 
     return(
         <div className="">
-            <div className="flex flex-col p-6 bg-[#1F2937] rounded-2xl flex-1 px-10">
+            <div className="h-60 flex flex-col p-6 bg-[#1F2937] rounded-2xl flex-1 px-12">
                 <h1 className="font-bold text-2xl text-white">Reported By</h1>
                 <div className="flex mt-6 items-center gap-5">
                     <img src={car} alt="" className="rounded-full size-20"/>
                     <div className="flex flex-col">
                         <p className="font-semibold text-2xl text-white">{reporter.fullname}</p>
                         <p className="text-sm text-[#D1D5DB]">{reporter.email}</p>
-                    </div>
-                </div>
-                <div className="mt-10 text-[#D1D5DB] flex flex-col gap-4">
-                    <div className="flex justify-between">
-                        <h3>Items Reported</h3>
-                        <p>{}</p>
-                    </div>
-                    <div className="flex justify-between">
-                        <h3>Items Returned</h3>
-                        <p>{}</p>
                     </div>
                 </div>
             </div>

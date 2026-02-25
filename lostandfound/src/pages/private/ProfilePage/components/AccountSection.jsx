@@ -1,10 +1,24 @@
 import { useState } from "react";
 import remove from "../../../../assets/images/remove.png";
 import { useAuth } from "../../../../context/AuthContext";
+import useApi from "../../../../hooks/useAPI";
 
 function AccountSection() {
   const { logout } = useAuth();
+  const { callApi } = useApi();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    try {
+      await callApi("DELETE", "/user/delete-account", {});
+      toast.success("Your account has been deleted successfully."); 
+      logout();
+      setShowDeleteModal(false);
+    } catch (err) {
+      console.error("Failed to delete account:", err);
+    }
+  };
 
   return (
     <div className="bg-[#1F2937] h-[350px] mt-20 w-full rounded-3xl p-10 relative">
@@ -20,7 +34,10 @@ function AccountSection() {
         </button>
 
         {/* Delete account button */}
-        <button className="w-full flex items-center justify-center gap-2 text-[#ef4444] h-14 rounded-xl border border-[#ef4444]">
+        <button
+          className="w-full flex items-center justify-center gap-2 text-[#ef4444] h-14 rounded-xl border border-[#ef4444]"
+          onClick={() => setShowDeleteModal(true)}
+        >
           <img src={remove} alt="" className="size-6" />
           Delete Account
         </button>
@@ -48,6 +65,31 @@ function AccountSection() {
                 }}
               >
                 Log out
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Account Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-[#1F2937] p-6 rounded-2xl w-96 flex flex-col gap-4">
+            <p className="text-white text-lg font-medium">
+              This action is permanent. Delete your account?
+            </p>
+            <div className="flex justify-end gap-4 mt-4">
+              <button
+                className="bg-gray-600 text-white px-4 py-2 rounded-xl"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-red-600 text-white px-4 py-2 rounded-xl"
+                onClick={handleDeleteAccount} 
+              >
+                Delete
               </button>
             </div>
           </div>

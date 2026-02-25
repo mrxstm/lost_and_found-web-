@@ -24,6 +24,18 @@ function MyReports() {
         }
     }
 
+    //delete items handler 
+     const handleDelete = async (id) => {
+        try {
+            await callApi("DELETE", `/item/${id}`, {});
+            setItems(prev => prev.filter(item => item.id !== id)); // remove instantly from UI
+            toast.success("Item deleted successfully");
+        } catch (e) {
+            toast.error("Failed to delete item. Please try again.");
+        }
+    };
+
+
     useEffect(()=> {
         fetchMyReports("lost");
     }, []);
@@ -45,6 +57,7 @@ function MyReports() {
                         loading={loading}
                         error={error}
                         items={items}
+                        onDelete={handleDelete}  
                     />
                 </div>
             </div>
