@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import InputField from '../InputField';
 import people from '../../assets/images/people.png';
@@ -15,6 +15,7 @@ import { Eye, EyeOff } from 'lucide-react';
 function SignupPopup({ close, openLogin }) {
 
     const [showPassword, setShowPassword] = useState(false);
+    const [colleges, setColleges] = useState([]);       
 
     const { loading, error, callApi } = useApi();
 
@@ -25,6 +26,20 @@ function SignupPopup({ close, openLogin }) {
     } = useForm({
         resolver: zodResolver(registerSchema)
     });
+
+    // fetch colleges
+    useEffect(() => {
+        const fetchColleges = async () => {
+            try {
+                const res = await callApi("GET", "/colleges", {});
+                setColleges(res.data);
+                
+            } catch (err) {
+                console.error("Failed to fetch colleges:", err);
+            }
+        };
+        fetchColleges();
+    }, []);
 
     const onSubmit = async (data) => {
         try {
@@ -112,7 +127,7 @@ function SignupPopup({ close, openLogin }) {
                             onClick={() => setShowPassword(prev => !prev)}
                             className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-white"
                         >
-                            {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                         </button>
                     </div>
                     {errors.password && <p style={{ color: "red" }}>{errors.password.message}</p>}
@@ -141,14 +156,20 @@ function SignupPopup({ close, openLogin }) {
                     <label htmlFor="college" className='text-[#9ca3af]'>College</label>
                     <div>
                         <select
-                            name="college"
                             id="college"
                             className='bg-[#111827] border border-[#9ca3af] w-full h-12 flex items-center gap-2 rounded-lg mt-2 text-white px-4'
                             {...register("college")}
+                            defaultValue=""
                         >
-                            <option value="" disabled>Select a college</option>
-                            <option value="Softwarica">Softwarica</option>
-                            <option value="Herald">Herald</option>
+                            <option value="" disabled>
+                                {colleges.length === 0 ? "Loading colleges..." : "Select a college"}
+                            </option>
+                            {/* 👇 dynamic colleges from backend */}
+                            {colleges.map(col => (
+                                <option key={col.id} value={col.id}>
+                                    {col.name}
+                                </option>
+                            ))}
                         </select>
                         {errors.college && <p style={{ color: "red" }}>{errors.college.message}</p>}
                     </div>

@@ -1,11 +1,15 @@
 import express from "express";
 import {isAuthenticated } from "../middlewares/authMiddleware.js";
-import { getAllUsers } from "../controllers/adminController.js";
+import { approveItem, deleteUser, getAllUsers, getPendingItems, rejectItem } from "../controllers/adminController.js";
 import { isAdmin } from "../middlewares/authorizeRole.js";
 
 
 const router = express.Router();
 
 router.get("/users", isAuthenticated, isAdmin, getAllUsers);
+router.delete("/users/:id", isAuthenticated, isAdmin, deleteUser);
+router.get("/items/pending", isAuthenticated, isAdmin, getPendingItems);
+router.patch("/items/:id/approve", isAuthenticated, isAdmin, approveItem);
+router.delete("/items/:id/reject", isAuthenticated, isAdmin, rejectItem);
 
 export default router;

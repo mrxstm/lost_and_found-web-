@@ -4,7 +4,7 @@ import calendar from '../assets/images/dates.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { MoreVertical, Trash2, Pencil } from 'lucide-react';
 
-function ProductCard({ id, item_name, image, location, date, fromPage, status, onDelete }) {
+function ProductCard({ id, item_name, image, location, date, fromPage, status, onDelete, isApproved }) {
 
     const [showMenu, setShowMenu] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -30,12 +30,22 @@ function ProductCard({ id, item_name, image, location, date, fromPage, status, o
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const cardContent = (
+     const cardContent = (
         <div className={`bg-[#1F2937] h-[480px] w-[380px] rounded-xl shadow-sm ${!isHomePage ? 'cursor-pointer hover:shadow-md' : ''}`}>
 
             {fromPage === "search" && (
                 <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-sm font-semibold ${bg} ${text} z-10`}>
                     {status}
+                </div>
+            )}
+            
+            {isMyReports && (
+                <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold z-10 ${
+                    isApproved
+                        ? "bg-green-600 text-white"
+                        : "bg-yellow-500 text-black"
+                }`}>
+                    {isApproved ? "✓ Approved" : "⏳ Pending"}
                 </div>
             )}
 
