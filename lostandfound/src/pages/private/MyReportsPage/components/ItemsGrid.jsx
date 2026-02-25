@@ -1,12 +1,12 @@
 import ProductCard from "../../../../components/ProductCard";
 
 
-function ItemsGrid({items}) {
+function ItemsGrid({items, onDelete}) {
     if(!items.length) {
         return <p className="text-gray-400 text-center">No items found</p>
     }
     return(
-        <div className="grid grid-cols-3 p-10">
+        <div className="grid grid-cols-3 p-10 gap-y-10">
             {
                 items.map((item)=> {
                     return <ProductCard
@@ -17,6 +17,7 @@ function ItemsGrid({items}) {
                         location={item.Location?.name}
                         date={item.date?.substring(0,10)}
                         fromPage="myReports"
+                        onDelete={onDelete}
                     />
                 })
             }
