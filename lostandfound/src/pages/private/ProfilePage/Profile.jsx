@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ProfileHeader from "./components/ProfileHeader";
 import StatCard from "./components/StatCard";
+import car from "../../../assets/images/car.jpg"
 import useApi from "../../../hooks/useAPI.js";
 import PersonalInfoSection from "./components/PersonalInfoSection.jsx";
 import AccountSection from "./components/AccountSection.jsx";
@@ -30,7 +31,7 @@ function Profile() {
     async function getUser() {
         try {
             const res = await callApi("GET", `/user/me`, {})
-            console.log(res);
+            console.log("user fetched");
             setUser(res.data);            
         } catch(e) {
             console.log("Something went wrong : ", e);
@@ -77,10 +78,9 @@ function Profile() {
         <div className="p-10">
             <div className="mt-10">
                 <ProfileHeader
-                    avatar={user.profile_pic_url}
+                    avatar={car}
                     full_name={user.fullname}
-                    college_name={user.College.name}   
-                    setUser={setUser}     
+                    college_name={user.College.name}        
                 />
             </div>
 
@@ -102,7 +102,7 @@ function Profile() {
         </div>
         
         <div className="bg-black flex flex-col items-center justify-center p-10 px-40">
-            <PersonalInfoSection user={user} setUser={setUser}/>
+            <PersonalInfoSection/>
             <AccountSection/>   
         </div>
     </div>
