@@ -1,13 +1,13 @@
 import logo from "../../assets/images/lostandfoundlogo.svg"
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { LayoutDashboard, Users, ClipboardList, LogOut, MapPin } from "lucide-react";
+import { LayoutDashboard, Users, ClipboardList, LogOut, MapPin, FileText } from "lucide-react";
 import { useState } from "react";
 
 function Sidebar() {
     const { logout } = useAuth();
     const navigate = useNavigate();
-    const [showLogoutModal, setShowLogoutModal] = useState(false);  // 👈 new
+    const [showLogoutModal, setShowLogoutModal] = useState(false);  
 
     const handleLogout = async () => {
         await logout();
@@ -51,6 +51,11 @@ function Sidebar() {
                     <NavLink to="/admin/locations" className={navLinkClass}>
                         <MapPin size={18} />
                         <span className="text-sm font-medium">Locations</span>
+                    </NavLink>
+
+                    <NavLink to="/admin/claims" className={navLinkClass}>
+                        <FileText size={18} />
+                        <span className="text-sm font-medium">Claims</span>
                     </NavLink>
                 </div>
 

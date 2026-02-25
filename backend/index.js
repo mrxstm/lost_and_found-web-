@@ -7,6 +7,7 @@ import adminRoute from "./routes/adminRoutes.js";
 import locationRoute from "./routes/locationRoutes.js";
 import statsRoute from "./routes/statRoute.js"
 import collegeRoute from "./routes/collegeRoute.js";
+import claimRoute from "./routes/claimRoute.js";
 import cookieParser from 'cookie-parser';
 import dotenv from "dotenv"
 import cors from "cors";
@@ -30,6 +31,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads/items', express.static('uploads/items'));
 app.use('/uploads/profiles', express.static('uploads/profiles'));
+app.use("/uploads/proofs", express.static("uploads/proofs"));
 
 app.use(cors({
     origin: "http://localhost:5173", 
@@ -44,6 +46,7 @@ app.use("/api/item", itemRoute)
 app.use("/api/locations", locationRoute)
 app.use("/api/stats", statsRoute);
 app.use("/api/colleges", collegeRoute);
+app.use("/api/claims", claimRoute);
 
 app.listen(port, ()=> {
     console.log("Server running");
