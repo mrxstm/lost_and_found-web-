@@ -14,7 +14,6 @@ const Search = React.lazy(() => import("../pages/private/SearchPage/Search"));
 const MyReports = React.lazy(() => import("../pages/private/MyReportsPage/MyReports"));
 const Profile = React.lazy(() => import("../pages/private/ProfilePage/Profile"));
 const ReportItem = React.lazy(() => import("../pages/private/ReportItemPage/ReportItem"));
-const Product = React.lazy(() => import("../pages/private/ProductPage/Product"));
 const Item = React.lazy(() => import("../pages/private/ItemPage/ItemPage"));
 const EditItem = React.lazy(() => import("../pages/private/EditItemPage/EditItem"));
 const MyClaimsPage = React.lazy(() => import("../pages/private/MyClaimsPage/MyClaimsPage"));
@@ -69,14 +68,7 @@ export const AppRoutes = ({openSignup}) => {
             </Suspense>
           }
         />
-        <Route
-          path="/product"
-          element={
-            <Suspense fallback={<div className="text-center">Loading Product...</div>}>
-              <Product />
-            </Suspense>
-          }
-        />
+    
         <Route
           path="/item/:id"
           element={

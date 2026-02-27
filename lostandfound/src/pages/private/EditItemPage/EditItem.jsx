@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
+import backarrow from "../../../assets/images/backarrow.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,7 +11,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import imagepng from "../../../assets/images/image-.png";
 import calendar from "../../../assets/images/Calendar.png";
 
-// Relaxed schema for edit — images are optional since existing ones may remain
 const editItemSchema = z.object({
     itemname:    z.string().min(3, { message: "Name must be at least 3 characters" }),
     category:    z.string().nonempty({ message: "Category is required" }),
@@ -28,9 +28,9 @@ function EditItem() {
     const { loading, callApi } = useApi();
 
     const [locations, setLocations] = useState([]);
-    const [existingImages, setExistingImages] = useState([]);   // saved URLs from server
-    const [removedImages, setRemovedImages] = useState([]);     // URLs marked for removal
-    const [newImages, setNewImages] = useState([]);             // newly picked File objects
+    const [existingImages, setExistingImages] = useState([]);
+    const [removedImages, setRemovedImages] = useState([]);
+    const [newImages, setNewImages] = useState([]);
 
     const {
         register,
@@ -47,7 +47,6 @@ function EditItem() {
         }
     });
 
-    // fetch locations
     useEffect(() => {
         const fetchLocations = async () => {
             const res = await callApi("GET", "/locations", {});
@@ -56,7 +55,6 @@ function EditItem() {
         fetchLocations();
     }, []);
 
-    // fetch item and pre-fill form
     useEffect(() => {
         const fetchItem = async () => {
             try {
@@ -83,7 +81,6 @@ function EditItem() {
         const slotsLeft = 4 - existingImages.length - newImages.length;
         const toAdd = files.slice(0, slotsLeft);
         setNewImages(prev => [...prev, ...toAdd]);
-        // reset file input so same file can be re-selected if removed
         e.target.value = "";
     };
 
@@ -97,12 +94,10 @@ function EditItem() {
     };
 
     const onSubmit = async (data) => {
-        // must have at least 1 image total
         if (existingImages.length + newImages.length === 0) {
             toast.error("At least one image is required");
             return;
         }
-
         try {
             const formData = new FormData();
             formData.append("itemName",        data.itemname);
@@ -111,15 +106,9 @@ function EditItem() {
             formData.append("location_id",     data.location);
             formData.append("itemDescription", data.description);
             formData.append("date",            data.date);
-
-            // tell backend which existing images to delete
             removedImages.forEach(url => formData.append("removed_images", url));
-
-            // attach new images
             newImages.forEach(file => formData.append("image_files", file));
-
             await callApi("PUT", `/item/${id}`, { data: formData });
-
             toast.success("Item updated successfully!");
             navigate("/myreports");
         } catch (e) {
@@ -130,144 +119,160 @@ function EditItem() {
     const totalImages = existingImages.length + newImages.length;
 
     return (
-        <div className="min-h-screen bg-[#111827] flex justify-center py-10 px-4">
-            <div className="bg-[#1F2937] w-full max-w-[900px] rounded-2xl text-[#9ca3af] p-6">
+        <div>
+            <div className="bg-[#1F2937] h-12 sm:h-16 w-full z-50 fixed top-0 left-0 flex items-center px-4 sm:px-12 gap-4 sm:gap-10">
+                <Link to="/myreports">
+                    <img src={backarrow} alt="" className="w-4 sm:w-6" />
+                </Link>
+                <h1 className="text-white text-sm sm:text-lg font-medium">Edit Item</h1>
+            </div>
 
-                <h1 className="text-white font-bold text-xl mb-1">Edit Item</h1>
-                <p className="text-sm">Update the details of your reported item</p>
+            <div className="min-h-screen bg-[#111827] flex justify-center pt-16 sm:pt-20 py-6 sm:py-10 px-3 sm:px-4">
+            <div className="bg-[#1F2937] w-full max-w-lg rounded-2xl text-[#9ca3af] p-3 sm:p-4 mb-10">
 
                 <form onSubmit={handleSubmit(onSubmit, e => console.log(e))}>
 
                     {/* Item Name */}
-                    <div className="mt-6">
-                        <label className="text-[#9ca3af]">Item Name</label>
+                    <div className="mt-2 sm:mt-3">
+                        <label className="text-[#9ca3af] text-[10px] sm:text-[12px]">Item Name</label>
                         <input
                             {...register("itemname")}
-                            className="bg-[#111827] w-full h-12 rounded-lg mt-2 text-white px-4 outline-none"
+                            className="bg-[#111827] w-full h-6 sm:h-8 flex items-center rounded-lg mt-1 text-white text-[9px] sm:text-[10px] px-2 outline-none"
                         />
-                        {errors.itemname && <p className="text-red-500 mt-1">{errors.itemname.message}</p>}
+                        {errors.itemname && <p className="text-red-500 text-[9px]">{errors.itemname.message}</p>}
                     </div>
 
                     {/* Category + Status */}
-                    <div className="flex gap-10 mt-6">
-                        <div className="flex-1">
-                            <label className="text-[#9ca3af]">Category</label>
+                    <div className="flex gap-3 sm:gap-4 items-center">
+                        <div className="mt-2 sm:mt-3 w-1/2">
+                            <label className="text-[#9ca3af] text-[10px] sm:text-[12px]">Category</label>
                             <select
                                 {...register("category")}
-                                className="bg-[#111827] w-full h-12 rounded-lg p-2 outline-none text-white mt-2"
+                                className="bg-[#111827] w-full h-6 sm:h-8 rounded-lg px-1 outline-none border-none text-white text-[9px] sm:text-[10px]"
                             >
                                 <option value="" disabled>Select a category</option>
                                 {["Electronics","Keys","Purse","Documents","Clothing","Books","Bags","Other"].map(c => (
                                     <option key={c} value={c}>{c}</option>
                                 ))}
                             </select>
-                            {errors.category && <p className="text-red-500 mt-1">{errors.category.message}</p>}
+                            {errors.category && <p className="text-red-500 text-[9px]">{errors.category.message}</p>}
                         </div>
 
-                        <div className="flex-1">
-                            <label className="text-[#9ca3af]">Status</label>
+                        <div className="mt-2 sm:mt-3 w-1/2">
+                            <label className="text-[#9ca3af] text-[10px] sm:text-[12px]">Status</label>
                             <select
                                 {...register("status")}
-                                className="bg-[#111827] w-full h-12 rounded-lg p-2 outline-none text-white mt-2"
+                                className="bg-[#111827] w-full h-6 sm:h-8 rounded-lg px-1 outline-none border-none text-white text-[9px] sm:text-[10px]"
                             >
                                 <option value="" disabled>Select status</option>
                                 <option value="lost">Lost</option>
                                 <option value="found">Found</option>
                             </select>
-                            {errors.status && <p className="text-red-500 mt-1">{errors.status.message}</p>}
+                            {errors.status && <p className="text-red-500 text-[9px]">{errors.status.message}</p>}
                         </div>
                     </div>
 
                     {/* Date + Location */}
-                    <div className="flex gap-10 mt-6">
-                        <div className="flex-1">
-                            <label className="text-[#9ca3af]">Date</label>
-                            <div className="relative mt-2">
+                    <div className="mt-2 sm:mt-3 flex gap-3 sm:gap-4 items-center">
+                        <div className="flex flex-col relative w-1/2">
+                            <label className="text-[#9ca3af] text-[10px] sm:text-[12px]">Date</label>
+                            <div className="relative w-full">
                                 <DatePicker
                                     selected={watch("date") ? new Date(watch("date")) : null}
                                     onChange={date => setValue("date", date.toISOString().split("T")[0])}
                                     dateFormat="yyyy-MM-dd"
                                     placeholderText="yyyy-mm-dd"
-                                    className="bg-[#111827] text-white h-12 rounded-lg p-2 w-full"
+                                    className="w-full bg-[#111827] text-white h-6 sm:h-8 rounded-lg px-2 pr-6 text-[10px] sm:text-[12px]"
                                     wrapperClassName="w-full"
                                 />
-                                <img src={calendar} alt="" className="size-4 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                                <img src={calendar} alt="" className="size-2.5 sm:size-3 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
                             </div>
-                            {errors.date && <p className="text-red-500 mt-1">{errors.date.message}</p>}
+                            {errors.date && <p className="text-red-500 text-[9px] mt-1">{errors.date.message}</p>}
                         </div>
 
-                        <div className="flex-1">
-                            <label className="text-[#9ca3af]">Location</label>
+                        <div className="flex flex-col w-1/2">
+                            <label className="text-[#9ca3af] text-[10px] sm:text-[12px]">Location</label>
                             <select
                                 {...register("location")}
-                                className="bg-[#111827] w-full h-12 rounded-lg p-2 outline-none text-white mt-2"
+                                className="bg-[#111827] w-full h-6 sm:h-8 rounded-lg px-1 outline-none border-none text-white text-[9px] sm:text-[10px]"
                             >
                                 <option value="" disabled>Select a location</option>
                                 {locations.map(loc => (
                                     <option key={loc.id} value={String(loc.id)}>{loc.name}</option>
                                 ))}
                             </select>
-                            {errors.location && <p className="text-red-500 mt-1">{errors.location.message}</p>}
+                            {errors.location && <p className="text-red-500 text-[9px] mt-1">{errors.location.message}</p>}
                         </div>
                     </div>
 
                     {/* Description */}
-                    <div className="mt-6">
-                        <label className="text-[#9ca3af]">Description</label>
+                    <div className="mt-2 sm:mt-3">
+                        <label className="text-[#9ca3af] text-[10px] sm:text-[12px]">Description</label>
                         <textarea
                             {...register("description")}
-                            className="bg-[#111827] w-full h-40 rounded-lg p-2 outline-none text-white resize-none mt-2"
+                            className="bg-[#111827] w-full outline-none border-none text-white h-16 sm:h-24 rounded-lg p-2 resize-none text-[9px] sm:text-[10px]"
                         />
-                        {errors.description && <p className="text-red-500 mt-1">{errors.description.message}</p>}
+                        {errors.description && <p className="text-red-500 text-[9px]">{errors.description.message}</p>}
                     </div>
 
                     {/* Images */}
-                    <div className="mt-6">
-                        <label className="text-[#9ca3af]">Images (1–4)</label>
-                        <div className="mt-4 flex gap-4 flex-wrap">
+                    <div className="mt-2 sm:mt-3">
+                        <label className="text-[#9ca3af] text-[10px] sm:text-[12px]">Images (1–4)</label>
 
-                            {/* Existing images from server */}
-                            {existingImages.map((url, i) => (
-                                <div key={`existing-${i}`} className="relative w-20 h-20">
-                                    <img
-                                        src={`http://localhost:5000${url}`}
-                                        alt="existing"
-                                        className="w-20 h-20 object-cover rounded"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRemoveExisting(url)}
-                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
-                                    >✕</button>
+                        {/* Upload drop zone — only show when no images yet */}
+                        {totalImages === 0 && (
+                            <label htmlFor="edit-image" className="cursor-pointer">
+                                <div className="bg-[#111827] h-20 sm:h-28 border border-dashed rounded-xl mt-1 sm:mt-2 flex flex-col items-center justify-center gap-1">
+                                    <img src={imagepng} alt="" className="w-5 h-5 sm:w-6 sm:h-6" />
+                                    <h4 className="font-semibold text-[9px] sm:text-[10px]">Click to upload image</h4>
+                                    <h4 className="text-[9px] sm:text-[10px]">PNG JPG upto 5MB</h4>
                                 </div>
-                            ))}
+                            </label>
+                        )}
 
-                            {/* Newly picked images */}
-                            {newImages.map((file, i) => (
-                                <div key={`new-${i}`} className="relative w-20 h-20">
-                                    <img
-                                        src={URL.createObjectURL(file)}
-                                        alt="new"
-                                        className="w-20 h-20 object-cover rounded"
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => handleRemoveNew(i)}
-                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-600"
-                                    >✕</button>
-                                </div>
-                            ))}
-
-                            {/* Add more slot */}
-                            {totalImages < 4 && (
-                                <label htmlFor="edit-image" className="cursor-pointer">
-                                    <div className="w-20 h-20 border-2 border-dashed border-[#9ca3af] rounded flex flex-col items-center justify-center text-[#9ca3af] hover:border-white hover:text-white transition">
-                                        <span className="text-2xl leading-none">+</span>
-                                        <span className="text-xs mt-1">Add</span>
+                        {/* Image previews */}
+                        {totalImages > 0 && (
+                            <div className="mt-2 sm:mt-3 flex gap-2 sm:gap-3 flex-wrap">
+                                {existingImages.map((url, i) => (
+                                    <div key={`existing-${i}`} className="relative w-10 h-10 sm:w-14 sm:h-14">
+                                        <img
+                                            src={`http://localhost:5000${url}`}
+                                            alt="existing"
+                                            className="w-full h-full object-cover rounded"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveExisting(url)}
+                                            className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-3 h-3 flex items-center justify-center text-[8px] hover:bg-red-600"
+                                        >✕</button>
                                     </div>
-                                </label>
-                            )}
-                        </div>
+                                ))}
+
+                                {newImages.map((file, i) => (
+                                    <div key={`new-${i}`} className="relative w-10 h-10 sm:w-14 sm:h-14">
+                                        <img
+                                            src={URL.createObjectURL(file)}
+                                            alt="new"
+                                            className="w-full h-full object-cover rounded"
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveNew(i)}
+                                            className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-3 h-3 flex items-center justify-center text-[8px] hover:bg-red-600"
+                                        >✕</button>
+                                    </div>
+                                ))}
+
+                                {totalImages < 4 && (
+                                    <label htmlFor="edit-image" className="cursor-pointer">
+                                        <div className="w-10 h-10 sm:w-14 sm:h-14 border-2 border-dashed border-[#9ca3af] rounded flex flex-col items-center justify-center text-[#9ca3af] hover:border-white hover:text-white transition">
+                                            <span className="text-base leading-none">+</span>
+                                            <span className="text-[9px]">Add</span>
+                                        </div>
+                                    </label>
+                                )}
+                            </div>
+                        )}
 
                         <input
                             type="file"
@@ -280,24 +285,25 @@ function EditItem() {
                     </div>
 
                     {/* Buttons */}
-                    <div className="flex gap-4 mt-8">
+                    <div className="flex gap-2 sm:gap-3 mt-3 sm:mt-4">
                         <button
                             type="button"
-                            onClick={() => navigate("/my-reports")}
-                            className="bg-[#9ca3af] text-black px-4 py-2 rounded-xl w-full h-12"
+                            onClick={() => navigate("/myreports")}
+                            className="bg-[#9ca3af] text-black px-3 py-1 rounded w-full text-[10px] sm:text-[12px]"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="bg-[#5DCEA6] text-black px-4 py-2 rounded-xl w-full h-12"
+                            className="bg-[#5DCEA6] text-black px-3 py-1 rounded w-full text-[10px] sm:text-[12px] h-7"
                         >
                             {loading ? "Saving..." : "Save Changes"}
                         </button>
                     </div>
 
                 </form>
+            </div>
             </div>
         </div>
     );

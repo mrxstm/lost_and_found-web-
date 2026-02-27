@@ -30,11 +30,10 @@ function StatCardSection() {
         fetchStats();
     }, []);
 
-    // format numbers nicely e.g. 1000 → 1,000
     const fmt = (num) => num.toLocaleString();
 
     return (
-        <div className="p-[40px] h-[350px] flex justify-around bg-[#1F2937]">
+        <div className="py-10 px-4 sm:px-8 bg-[#1F2937] grid grid-cols-2 lg:grid-cols-4 gap-6">
             <StatCard
                 icon={file}
                 info={loading ? "..." : fmt(stats.totalReports)}

@@ -1,10 +1,10 @@
 function InfoField({ label, value, htmlfor, isEditing, name, onChange, type = "text", options = [] }) {
-    const inputClasses = `h-16 w-[600px] p-4 mt-2 rounded-2xl 
+    const inputClasses = `h-7 sm:h-10 w-full p-1 sm:p-2 mt-1 rounded-xl text-[10px] sm:text-xs
         ${isEditing ? "text-black bg-white focus:outline-none focus:ring-2 focus:ring-blue-400" : "text-white bg-gray-700"}`;
 
     return (
         <div className="flex flex-col">
-            <label htmlFor={htmlfor} className="text-xl text-white">{label}</label>
+            <label htmlFor={htmlfor} className="text-[10px] sm:text-xs text-white">{label}</label>
 
             {isEditing ? (
                 type === "select" ? (
