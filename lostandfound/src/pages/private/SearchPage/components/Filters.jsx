@@ -5,18 +5,13 @@ import FilterDropdown from './FilterDropdown';
 
 function Filters({ onFilterChange }) {
   const { callApi } = useApi();
-
-  // Local states
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const [status, setStatus] = useState('all');
   const [location, setLocation] = useState('all');
   const [locations, setLocations] = useState([]);
-
-  // Debounced query state
   const [debouncedQuery, setDebouncedQuery] = useState(query);
 
-  // Fetch locations once on mount
   useEffect(() => {
     const fetchLocations = async () => {
       try {
@@ -29,42 +24,33 @@ function Filters({ onFilterChange }) {
     fetchLocations();
   }, []);
 
-  // Debounce search query
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
     }, 400);
-
     return () => clearTimeout(handler);
   }, [query]);
 
-  // Notify parent whenever any filter changes (including debounced query)
   useEffect(() => {
-    onFilterChange({
-      query: debouncedQuery,
-      category,
-      status,
-      location,
-    });
+    onFilterChange({ query: debouncedQuery, category, status, location });
   }, [debouncedQuery, category, status, location]);
 
   return (
-    <div className="flex flex-col h-64 bg-[#1F2937]">
+    <div className="flex flex-col bg-[#1F2937] py-4 px-4 sm:px-8">
       {/* Search input */}
-      <div className="flex items-center m-10 gap-2 bg-[#111827] border border-[#374151] rounded-xl hover:border-[#393328]">
-        <img src={searchIcon} alt="search" className="size-6 ml-4" />
+      <div className="flex h-10 items-center my-4 gap-2 bg-[#111827] border border-[#374151] rounded-xl hover:border-[#393328]">
+        <img src={searchIcon} alt="search" className="size-3 sm:size-4 ml-3 sm:ml-4" />
         <input
           type="text"
-          placeholder="Search item by name, location or description ..."
+          placeholder="Search item by name, location or description..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full m-2 h-10 focus:outline-none bg-[#111827] text-white"
+          className="w-full m-2 h-6 sm:h-7 focus:outline-none bg-[#111827] text-white text-xs"
         />
       </div>
 
       {/* Dropdowns */}
-      <div className="flex items-center justify-around">
-        {/* Category */}
+      <div className="flex flex-wrap gap-3 sm:gap-0 sm:justify-around pb-4">
         <FilterDropdown
           label="Category"
           value={category}
@@ -79,8 +65,6 @@ function Filters({ onFilterChange }) {
             { value: 'Other', label: 'Others' },
           ]}
         />
-
-        {/* Status */}
         <FilterDropdown
           label="Status"
           value={status}
@@ -91,8 +75,6 @@ function Filters({ onFilterChange }) {
             { value: 'found', label: 'Found' },
           ]}
         />
-
-        {/* Location */}
         <FilterDropdown
           label="Location"
           value={location}

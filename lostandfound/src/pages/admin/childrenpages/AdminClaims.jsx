@@ -61,13 +61,13 @@ function AdminClaims() {
             <h1 className="text-white text-2xl font-bold mb-2">Claims</h1>
             <p className="text-[#9ca3af] mb-8">Monitor all claims across your college</p>
 
-            {/* Filter tabs */}
-            <div className="bg-[#1F2937] h-12 p-2 flex items-center rounded-3xl gap-1 w-fit mb-8">
+           {/* Filter tabs */}
+            <div className="bg-[#1F2937] h-8 sm:h-12 p-1 sm:p-2 flex items-center rounded-3xl gap-1 w-fit mb-8">
                 {["all", "pending", "approved", "rejected"].map(f => (
                     <button
                         key={f}
                         onClick={() => setFilter(f)}
-                        className={`rounded-3xl h-8 px-5 text-sm font-semibold transition capitalize ${
+                        className={`rounded-3xl h-5 sm:h-8 px-3 sm:px-5 text-[10px] sm:text-sm font-semibold transition capitalize ${
                             filter === f
                                 ? "bg-[#5DCEA6] text-black"
                                 : "bg-transparent text-white hover:bg-[#374151]"
@@ -82,8 +82,8 @@ function AdminClaims() {
             {filteredClaims.length === 0 ? (
                 <p className="text-gray-400 text-center mt-20">No claims found</p>
             ) : (
-                <div className="bg-[#1F2937] rounded-2xl overflow-hidden">
-                    <table className="w-full text-sm">
+                    <div className="bg-[#1F2937] rounded-2xl overflow-hidden p-2 overflow-x-auto">
+                        <table className="w-full text-xs">
                         <thead>
                             <tr className="text-[#9ca3af] border-b border-[#374151]">
                                 <th className="text-left px-6 py-4">Item</th>

@@ -19,7 +19,7 @@ function ReportedBy({ reporter, stats, itemData }) {
     const [contactDetails, setContactDetails] = useState(null);
 
     if (!reporter) {
-        return <div className="text-white">Loading reporter info...</div>;
+        return <div className="text-white text-xs">Loading reporter info...</div>;
     }
 
     const isOwner = user?.id === itemData?.reported_by;
@@ -48,7 +48,6 @@ function ReportedBy({ reporter, stats, itemData }) {
             formData.append("item_id", itemData.id);
             formData.append("message", claimMessage);
             if (proofImage) formData.append("proof_image", proofImage);
-
             await callApi("POST", "/claims", { data: formData });
             toast.success(isFound ? "Claim submitted successfully!" : "Notification sent to the owner!");
             setShowClaimModal(false);
@@ -72,56 +71,52 @@ function ReportedBy({ reporter, stats, itemData }) {
     return (
         <div className="">
             {/* Reporter info */}
-            <div className="h-60 flex flex-col p-6 bg-[#1F2937] rounded-2xl flex-1 px-12">
-                <h1 className="font-bold text-2xl text-white">Reported By</h1>
-                <div className="flex mt-6 items-center gap-5">
-                    <img src={car} alt="" className="rounded-full size-20" />
+            <div className="flex flex-col p-3 sm:p-4 bg-[#1F2937] rounded-2xl px-4 sm:px-6 sm:h-40 h-40">
+                <h1 className="font-bold text-xs sm:text-sm text-white">Reported By</h1>
+                <div className="flex mt-3 sm:mt-4 items-center gap-3">
+                    <img src={car} alt="" className="rounded-full size-10 sm:size-12" />
                     <div className="flex flex-col">
-                        <p className="font-semibold text-2xl text-white">{reporter.fullname}</p>
-                        <p className="text-sm text-[#D1D5DB]">{reporter.email}</p>
+                        <p className="font-semibold text-xs sm:text-sm text-white">{reporter.fullname}</p>
+                        <p className="text-[10px] sm:text-[12px] text-[#D1D5DB]">{reporter.email}</p>
                     </div>
                 </div>
             </div>
 
             {/* Action buttons */}
-            <div className="flex flex-col p-6 bg-[#1F2937] rounded-2xl flex-1 px-10 py-10 mt-10 gap-6">
+            <div className="flex flex-col p-3 sm:p-4 h-40 bg-[#1F2937] rounded-2xl px-4 sm:px-6 mt-3 sm:mt-4 gap-2 sm:gap-3 items-center justify-center">
 
-                {/* Claim This Item — for found items */}
                 {canClaim && (
                     <button
                         onClick={() => setShowClaimModal(true)}
-                        className="bg-[#5DCEA6] h-14 rounded-xl font-semibold flex gap-4 items-center justify-center text-black"
+                        className="bg-[#5DCEA6] h-6 w-40 sm:h-8 sm:w-48 rounded-xl font-semibold flex gap-2 items-center justify-center text-black text-[10px] sm:text-[14px]"
                     >
-                        <img src={claim} alt="" className="size-8" />
+                        <img src={claim} alt="" className="size-4 sm:size-5" />
                         Claim This Item
                     </button>
                 )}
 
-                {/* I Found This Item — for lost items */}
                 {canFoundIt && (
                     <button
                         onClick={() => setShowClaimModal(true)}
-                        className="bg-[#5DCEA6] h-14 rounded-xl font-semibold flex gap-4 items-center justify-center text-black"
+                        className="bg-[#5DCEA6] h-6 w-40 sm:h-8 sm:w-48 rounded-xl font-semibold flex gap-2 items-center justify-center text-black text-[10px] sm:text-[14px]"
                     >
-                        <img src={claim} alt="" className="size-8" />
-                         I Found This Item
+                        <img src={claim} alt="" className="size-4 sm:size-5" />
+                        I Found This Item
                     </button>
                 )}
 
-                {/* Already claimed badge */}
                 {isClaimed && (
-                    <div className="bg-gray-700 h-14 rounded-xl flex items-center justify-center text-gray-400 font-semibold">
+                    <div className="bg-gray-700 h-6 w-40 sm:h-8 sm:w-48 rounded-xl flex items-center justify-center text-gray-400 font-semibold text-[10px] sm:text-[14px]">
                         Item Already Claimed
                     </div>
                 )}
 
-                {/* Contact button — only for non-owners */}
                 {user && !isOwner && (
                     <button
                         onClick={handleGetContact}
-                        className="h-14 rounded-xl border border-[#5DCEA6] text-white flex items-center justify-center gap-2"
+                        className="h-6 w-40 sm:h-8 sm:w-48 rounded-xl border border-[#5DCEA6] text-white flex items-center justify-center gap-2 text-[10px] sm:text-[14px]"
                     >
-                        <img src={message} alt="" className="size-6" />
+                        <img src={message} alt="" className="size-3.5 sm:size-4" />
                         Contact Reporter
                     </button>
                 )}
@@ -129,43 +124,42 @@ function ReportedBy({ reporter, stats, itemData }) {
 
             <SafetyTips />
 
-            {/* ── Claim / Found Modal ── */}
+            {/* Claim / Found Modal */}
             {showClaimModal && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-[#1F2937] p-6 rounded-2xl w-[480px] flex flex-col gap-4">
-                        <h2 className="text-white text-lg font-semibold">{modalTitle}</h2>
-                        <p className="text-[#9ca3af] text-sm">{modalDescription}</p>
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+                    <div className="bg-[#1F2937] p-4 sm:p-5 rounded-2xl w-full max-w-sm sm:max-w-md flex flex-col gap-3">
+                        <h2 className="text-white text-xs sm:text-sm font-semibold">{modalTitle}</h2>
+                        <p className="text-[#9ca3af] text-[10px] sm:text-xs">{modalDescription}</p>
 
                         <textarea
                             value={claimMessage}
                             onChange={e => setClaimMessage(e.target.value)}
                             placeholder={modalPlaceholder}
-                            className="bg-[#111827] text-white rounded-xl p-3 h-32 resize-none outline-none border border-[#374151] focus:border-[#5DCEA6] transition"
+                            className="bg-[#111827] text-white rounded-xl p-2 h-24 sm:h-28 resize-none outline-none border border-[#374151] focus:border-[#5DCEA6] transition text-[10px] sm:text-xs"
                         />
 
-                        {/* Proof image */}
                         <div>
-                            <label className="text-[#9ca3af] text-sm">
+                            <label className="text-[#9ca3af] text-[10px] sm:text-xs">
                                 Proof Image (optional)
                             </label>
                             <input
                                 type="file"
                                 accept="image/*"
                                 onChange={e => setProofImage(e.target.files[0])}
-                                className="mt-2 text-[#9ca3af] text-sm w-full"
+                                className="mt-1 text-[#9ca3af] text-[10px] sm:text-xs w-full"
                             />
                             {proofImage && (
                                 <img
                                     src={URL.createObjectURL(proofImage)}
                                     alt="proof preview"
-                                    className="mt-2 w-24 h-24 object-cover rounded-lg"
+                                    className="mt-2 w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg"
                                 />
                             )}
                         </div>
 
-                        <div className="flex justify-end gap-3 mt-2">
+                        <div className="flex justify-end gap-2 mt-1">
                             <button
-                                className="bg-gray-600 text-white px-4 py-2 rounded-xl text-sm"
+                                className="bg-gray-600 text-white px-3 py-1.5 rounded-xl text-[10px] sm:text-xs"
                                 onClick={() => {
                                     setShowClaimModal(false);
                                     setClaimMessage("");
@@ -175,7 +169,7 @@ function ReportedBy({ reporter, stats, itemData }) {
                                 Cancel
                             </button>
                             <button
-                                className="bg-[#5DCEA6] text-black px-4 py-2 rounded-xl text-sm font-medium"
+                                className="bg-[#5DCEA6] text-black px-3 py-1.5 rounded-xl text-[10px] sm:text-xs font-medium"
                                 onClick={handleSubmitClaim}
                                 disabled={loading}
                             >
@@ -186,21 +180,21 @@ function ReportedBy({ reporter, stats, itemData }) {
                 </div>
             )}
 
-            {/* ── Contact Modal ── */}
+            {/* Contact Modal */}
             {showContactModal && contactDetails && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-[#1F2937] p-6 rounded-2xl w-96 flex flex-col gap-4">
-                        <h2 className="text-white text-lg font-semibold">🎉 Claim Approved!</h2>
-                        <p className="text-[#9ca3af] text-sm">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+                    <div className="bg-[#1F2937] p-4 sm:p-5 rounded-2xl w-full max-w-xs sm:max-w-sm flex flex-col gap-3">
+                        <h2 className="text-white text-xs sm:text-sm font-semibold">🎉 Claim Approved!</h2>
+                        <p className="text-[#9ca3af] text-[10px] sm:text-xs">
                             Your claim has been approved. You can now contact the reporter:
                         </p>
-                        <div className="bg-[#111827] rounded-xl p-4 flex flex-col gap-2">
-                            <p className="text-white font-medium">{contactDetails.fullname}</p>
-                            <p className="text-[#9ca3af] text-sm">📧 {contactDetails.email}</p>
-                            <p className="text-[#9ca3af] text-sm">📞 {contactDetails.phone_no}</p>
+                        <div className="bg-[#111827] rounded-xl p-3 flex flex-col gap-1.5">
+                            <p className="text-white font-medium text-xs sm:text-sm">{contactDetails.fullname}</p>
+                            <p className="text-[#9ca3af] text-[10px] sm:text-xs">📧 {contactDetails.email}</p>
+                            <p className="text-[#9ca3af] text-[10px] sm:text-xs">📞 {contactDetails.phone_no}</p>
                         </div>
                         <button
-                            className="bg-gray-600 text-white px-4 py-2 rounded-xl text-sm self-end"
+                            className="bg-gray-600 text-white px-3 py-1.5 rounded-xl text-[10px] sm:text-xs self-end"
                             onClick={() => setShowContactModal(false)}
                         >
                             Close

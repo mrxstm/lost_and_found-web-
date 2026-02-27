@@ -9,40 +9,40 @@ import { useParams } from "react-router-dom";
 
 function ItemPage() {
 
-    const {error, loading, callApi} = useApi();
-    const {id} = useParams();
+    const { error, loading, callApi } = useApi();
+    const { id } = useParams();
     const [itemData, setItemData] = useState(null);
-    const fetchItemById = async()=> {
+
+    const fetchItemById = async () => {
         try {
             const res = await callApi("GET", `/item/${id}`, {});
-            console.log(res);
-            setItemData(res.data)
-            
+            setItemData(res.data);
         } catch (err) {
             console.error("API error:", err);
             toast.error(err?.response?.data?.message || "Could not load item");
         }
-    }
+    };
 
-    useEffect(()=> {
+    useEffect(() => {
         fetchItemById();
     }, [id]);
 
-    return(
-        <div className="bg-[#111827] p-10 min-h-screen w-full">
-            <Header/>
-            <div className="flex gap-8 mt-40">
-                <ItemDescription
-                    itemData={itemData}
-                />
-                <ReportedBy
-                  reporter={itemData?.reporter}
-                  stats={itemData?.stats}
-                  itemData={itemData} 
-                />
+    return (
+        <div className="bg-[#111827] p-3 sm:p-6 min-h-screen w-full">
+            <Header />
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 mt-16 sm:mt-20">
+                <div className="flex-1 min-w-0">
+                    <ItemDescription itemData={itemData} />
+                </div>
+                <div className="w-full sm:w-56 md:w-64 shrink-0">
+                    <ReportedBy
+                        reporter={itemData?.reporter}
+                        stats={itemData?.stats}
+                        itemData={itemData}
+                    />
+                </div>
             </div>
         </div>
-        
     );
 }
 

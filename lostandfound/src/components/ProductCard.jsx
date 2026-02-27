@@ -30,20 +30,18 @@ function ProductCard({ id, item_name, image, location, date, fromPage, status, o
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-     const cardContent = (
-        <div className={`bg-[#1F2937] h-[480px] w-[380px] rounded-xl shadow-sm ${!isHomePage ? 'cursor-pointer hover:shadow-md' : ''}`}>
+    const cardContent = (
+        <div className={`bg-[#1F2937] rounded-xl shadow-sm w-[150px] w-[240px] sm:w-[240px] lg:w-[240px] lg:h-[350px] ${!isHomePage ? 'cursor-pointer hover:shadow-md' : ''}`}>
 
             {fromPage === "search" && (
-                <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-sm font-semibold ${bg} ${text} z-10`}>
+                <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold ${bg} ${text} z-10`}>
                     {status}
                 </div>
             )}
-            
+
             {isMyReports && (
-                <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold z-10 ${
-                    isApproved
-                        ? "bg-green-600 text-white"
-                        : "bg-yellow-500 text-black"
+                <div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[10px] font-semibold z-10 ${
+                    isApproved ? "bg-green-600 text-white" : "bg-yellow-500 text-black"
                 }`}>
                     {isApproved ? "✓ Approved" : "⏳ Pending"}
                 </div>
@@ -52,28 +50,31 @@ function ProductCard({ id, item_name, image, location, date, fromPage, status, o
             <img
                 src={image}
                 alt={item_name}
-                className="h-[250px] w-full object-cover object-center rounded-t-xl"
+                className="h-28 sm:h-28 lg:h-36 w-full object-cover object-center rounded-t-xl"
             />
-            <h1 className="mt-4 ml-4 text-white font-semibold">{item_name}</h1>
-            <p className='mt-2 ml-5 text-[#D1D5DB] flex items-center gap-2 text-sm'>
-                <img src={locationimg} alt="" className='size-3.5' /> {location}
-            </p>
-            <p className='mt-2 ml-5 text-[#D1D5DB] flex items-center gap-2 text-sm'>
-                <img src={calendar} alt="" className='size-3.5' /> {date}
-            </p>
+            <div className="p-3">
+                <h1 className="text-white font-semibold truncate text-xs mt-1 mb-2">{item_name}</h1>
+                <p className='mt-1 text-[#D1D5DB] flex items-center gap-2 text-[12px]'>
+                    <img src={locationimg} alt="" className='size-3 shrink-0' /> 
+                    <span className="truncate">{location}</span>
+                </p>
+                <p className='mt-1 text-[#D1D5DB] flex items-center gap-2 text-[12px]'>
+                    <img src={calendar} alt="" className='size-3 shrink-0' /> {date}
+                </p>
 
-            {!isHomePage && (
-                <button className='bg-[#5DCEA6] w-[90%] ml-4 mt-4 h-10 rounded-xl text-black'>
-                    View Details
-                </button>
-            )}
+                {!isHomePage && (
+                    <button className='bg-[#5DCEA6] w-full mt-3 h-7 rounded-lg text-black text-[13px] font-medium'>
+                        View Details
+                    </button>
+                )}
+            </div>
         </div>
     );
 
     return (
         <>
-            {/* ── Outer wrapper: handles positioning + hover group ── */}
-            <div className="relative group w-fit">
+            {/* Outer wrapper */}
+            <div className="relative group w-full">
 
                 {/* Card wrapped in Link (except home page) */}
                 {isHomePage
@@ -81,11 +82,11 @@ function ProductCard({ id, item_name, image, location, date, fromPage, status, o
                     : <Link to={`/item/${id}`} state={{ from: fromPage }}>{cardContent}</Link>
                 }
 
-                {/* ── Triple-dot menu: sits OUTSIDE the Link so clicks don't navigate ── */}
+                {/* Triple-dot menu */}
                 {isMyReports && (
                     <div
                         ref={menuRef}
-                        className="absolute top-3 right-3 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                        className="absolute top-3 right-20 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                     >
                         <button
                             type="button"
@@ -123,10 +124,10 @@ function ProductCard({ id, item_name, image, location, date, fromPage, status, o
                 )}
             </div>
 
-            {/* ── Delete Confirmation Modal ── */}
+            {/* Delete Confirmation Modal */}
             {showConfirm && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-[#1F2937] p-6 rounded-2xl w-80 flex flex-col gap-3">
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+                    <div className="bg-[#1F2937] p-6 rounded-2xl w-full max-w-sm flex flex-col gap-3">
                         <h2 className="text-white text-lg font-semibold">Delete Item</h2>
                         <p className="text-gray-400 text-sm">
                             Are you sure you want to delete{' '}
