@@ -5,9 +5,11 @@ import AdminRoutes from "./AdminRoutes";
 import PrivateRoutes from "./PrivateRoutes";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 
+
 import Home from "../pages/public/HomePage/Home";
 
 // lazy imports for other pages
+
 
 //user pages
 const Search = React.lazy(() => import("../pages/private/SearchPage/Search"));
@@ -17,6 +19,8 @@ const ReportItem = React.lazy(() => import("../pages/private/ReportItemPage/Repo
 const Item = React.lazy(() => import("../pages/private/ItemPage/ItemPage"));
 const EditItem = React.lazy(() => import("../pages/private/EditItemPage/EditItem"));
 const MyClaimsPage = React.lazy(() => import("../pages/private/MyClaimsPage/MyClaimsPage"));
+const ResetPasswordPage = React.lazy(() => import("../pages/public/ResetPasswordPage/ResetPasswordPage"));
+
 
 // admin pages
 const Dashboard = React.lazy(() => import("../pages/admin/childrenpages/Dashboard"));
@@ -33,6 +37,15 @@ export const AppRoutes = ({openSignup}) => {
         <Home     
           openSignup={openSignup}
       />} />
+      
+      <Route
+        path="/reset-password"
+        element={
+          <Suspense fallback={<div className="text-center">Loading Search...</div>}>
+            <ResetPasswordPage />
+          </Suspense>
+        }
+      />
 
       {/* Protected user routes */}
       <Route element={<PrivateRoutes />}>
@@ -95,7 +108,10 @@ export const AppRoutes = ({openSignup}) => {
             </Suspense>
           }
         />
+
+      
       </Route>
+
 
       {/* Admin routes */}
       <Route element={<AdminRoutes />}>

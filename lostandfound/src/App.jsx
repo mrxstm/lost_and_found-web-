@@ -8,6 +8,8 @@ import Modal from './components/Modal'
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AppRoutes } from './routes/appRoutes'
+import ForgotPasswordPopup from './components/authforms/ForgotPasswordPopup'  
+
 
 
 
@@ -21,6 +23,7 @@ function App() {
   
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
 
 
@@ -47,6 +50,10 @@ function App() {
                     setShowLogin(false);
                     setShowSignup(true);
                   }}
+                  openForgotPassword={() => {      
+                        setShowLogin(false);
+                        setShowForgotPassword(true);
+                  }}
                 />
             </Modal>
           )
@@ -66,6 +73,19 @@ function App() {
             </Modal>
           )
         }
+
+        {showForgotPassword && (
+              <Modal onClose={() => setShowForgotPassword(false)}>
+                  <ForgotPasswordPopup
+                      close={() => setShowForgotPassword(false)}
+                      openLogin={() => {
+                          setShowForgotPassword(false);
+                          setShowLogin(true);
+                      }}
+                  />
+              </Modal>
+          )}
+
 
           <AppRoutes
            openSignup={() => {
