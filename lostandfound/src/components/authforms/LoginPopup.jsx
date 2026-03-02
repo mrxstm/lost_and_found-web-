@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Eye, EyeOff } from 'lucide-react';
 
-function LoginPopup({ close, openSignup }) {
+function LoginPopup({ close, openSignup, openForgotPassword }) {
 
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
@@ -90,7 +90,10 @@ function LoginPopup({ close, openSignup }) {
                         Don't have an account?{' '}
                         <span className='text-[#5DCEA6] cursor-pointer' onClick={openSignup}>Sign up</span>
                     </p>
-                    <p className='text-[#9ca3af] text-[9px] sm:text-[10px] cursor-pointer hover:text-[#5DCEA6]'>Forgot password?</p>
+                    <p 
+                        className='text-[#9ca3af] text-[9px] sm:text-[10px] cursor-pointer hover:text-[#5DCEA6]'
+                        onClick={openForgotPassword}  
+                    >Forgot password?</p>
                 </div>
             </form>
         </div>
