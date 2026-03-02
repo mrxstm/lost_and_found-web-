@@ -5,23 +5,47 @@ import AdminRoutes from "./AdminRoutes";
 import PrivateRoutes from "./PrivateRoutes";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 
+
 import Home from "../pages/public/HomePage/Home";
 
 // lazy imports for other pages
+
+
+//user pages
 const Search = React.lazy(() => import("../pages/private/SearchPage/Search"));
 const MyReports = React.lazy(() => import("../pages/private/MyReportsPage/MyReports"));
 const Profile = React.lazy(() => import("../pages/private/ProfilePage/Profile"));
 const ReportItem = React.lazy(() => import("../pages/private/ReportItemPage/ReportItem"));
-const Product = React.lazy(() => import("../pages/private/ProductPage/Product"));
 const Item = React.lazy(() => import("../pages/private/ItemPage/ItemPage"));
+const EditItem = React.lazy(() => import("../pages/private/EditItemPage/EditItem"));
+const MyClaimsPage = React.lazy(() => import("../pages/private/MyClaimsPage/MyClaimsPage"));
+const ResetPasswordPage = React.lazy(() => import("../pages/public/ResetPasswordPage/ResetPasswordPage"));
+
+
+// admin pages
 const Dashboard = React.lazy(() => import("../pages/admin/childrenpages/Dashboard"));
 const Users = React.lazy(() => import("../pages/admin/childrenpages/Users"));
+const AdminPendingItems = React.lazy(() => import("../pages/admin/childrenpages/AdminPendingItems"));
+const AdminLocations = React.lazy(() => import("../pages/admin/childrenpages/AdminLocations"));
+const AdminClaims = React.lazy(() => import("../pages/admin/childrenpages/AdminClaims"));
 
-export const AppRoutes = () => {
+export const AppRoutes = ({openSignup}) => {
   return (
     <Routes>
       {/* Public routes */}
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={
+        <Home     
+          openSignup={openSignup}
+      />} />
+      
+      <Route
+        path="/reset-password"
+        element={
+          <Suspense fallback={<div className="text-center">Loading Search...</div>}>
+            <ResetPasswordPage />
+          </Suspense>
+        }
+      />
 
       {/* Protected user routes */}
       <Route element={<PrivateRoutes />}>
@@ -57,15 +81,8 @@ export const AppRoutes = () => {
             </Suspense>
           }
         />
+    
         <Route
-          path="/product"
-          element={
-            <Suspense fallback={<div className="text-center">Loading Product...</div>}>
-              <Product />
-            </Suspense>
-          }
-        />
-          <Route
           path="/item/:id"
           element={
             <Suspense fallback={<div className="text-center">Loading Item...</div>}>
@@ -73,7 +90,28 @@ export const AppRoutes = () => {
             </Suspense>
           }
         />
+
+        <Route
+          path="/item/edit/:id"
+          element={
+            <Suspense fallback={<div className="text-center">Loading Item...</div>}>
+              <EditItem />
+            </Suspense>
+          }
+        />
+
+        <Route
+          path="/my-claims"
+          element={
+            <Suspense fallback={<div className="text-center">Loading Search...</div>}>
+              <MyClaimsPage />
+            </Suspense>
+          }
+        />
+
+      
       </Route>
+
 
       {/* Admin routes */}
       <Route element={<AdminRoutes />}>
@@ -94,6 +132,40 @@ export const AppRoutes = () => {
             element={
               <Suspense fallback={<div className="text-center">Loading User...</div>}>
                 <Users/>
+              </Suspense>
+            }
+          />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route
+            path="/admin/pending-items"
+            element={
+              <Suspense fallback={<div className="text-center">Loading Dashboard...</div>}>
+                <AdminPendingItems/>
+              </Suspense>
+            }
+          />
+        </Route>
+
+        <Route element={<AdminLayout />}>
+          <Route
+            path="/admin/locations"
+            element={
+              <Suspense fallback={<div className="text-center">Loading Dashboard...</div>}>
+                <AdminLocations/>
+              </Suspense>
+            }
+          />
+        </Route>
+        
+
+         <Route element={<AdminLayout />}>
+          <Route
+            path="/admin/claims"
+            element={
+              <Suspense fallback={<div className="text-center">Loading Dashboard...</div>}>
+                <AdminClaims/>
               </Suspense>
             }
           />

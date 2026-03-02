@@ -55,3 +55,28 @@ export const loginSchema = z.object({
     .nonempty({message: "Password cannot be empty"})
 
 })
+
+
+export const forgotPasswordSchema = z.object({
+    email: z
+        .string()
+        .nonempty({ message: "Email cannot be empty" })
+        .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, { message: "Invalid email address" })
+});
+
+export const resetPasswordSchema = z.object({
+    password: z
+        .string()
+        .nonempty({ message: "Password cannot be empty" })
+        .min(8, "Password must be at least 8 characters")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
+            "Must include upper, lower, number & special character"
+        ),
+    confirmPassword: z
+        .string()
+        .nonempty({ message: "Please confirm your password" })
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"]
+});

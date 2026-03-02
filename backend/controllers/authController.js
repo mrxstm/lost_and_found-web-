@@ -1,8 +1,10 @@
+import { sendResetEmail } from "../utils/mailer.js";
 import { College } from "../models/collegeModel.js";
 import { Users } from "../models/association.js";
 import { hashPassword } from "../utils/hashPassword.js";
 import { generateToken } from "../utils/jwt-utils.js";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 
 
 
@@ -178,3 +180,98 @@ export const logout = (req,res) => {
         res.status(500).json({message: e.message});
     }
 }
+
+const resetTokens = new Map();
+
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email || email.trim() === "") {
+            return res.status(400).json({ message: "Email is required" });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Invalid email format" });
+        }
+
+        const user = await Users.findOne({ where: { email } });
+
+        // Always return success even if user not found (security best practice)
+        if (!user) {
+            return res.status(200).json({ 
+                message: "If this email exists, a reset link has been sent" 
+            });
+        }
+
+        // Generate secure token
+        const token = crypto.randomBytes(32).toString("hex");
+        const expiresAt = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+        // Store token with user email and expiry
+        resetTokens.set(token, { email: user.email, expiresAt });
+
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+
+        await sendResetEmail(user.email, resetLink);
+
+        res.status(200).json({ 
+            message: "If this email exists, a reset link has been sent" 
+        });
+
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+};
+
+export const resetPassword = async (req, res) => {
+    try {
+        const { token, password } = req.body;
+
+        if (!token) {
+            return res.status(400).json({ message: "Token is required" });
+        }
+
+        if (!password || password.trim() === "") {
+            return res.status(400).json({ message: "Password is required" });
+        }
+
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({
+                message: "Password must be 8+ chars, include uppercase, lowercase, number & special char"
+            });
+        }
+
+        // Check token exists
+        const tokenData = resetTokens.get(token);
+        if (!tokenData) {
+            return res.status(400).json({ message: "Invalid or expired reset token" });
+        }
+
+        // Check expiry
+        if (Date.now() > tokenData.expiresAt) {
+            resetTokens.delete(token);
+            return res.status(400).json({ message: "Reset token has expired" });
+        }
+
+        // Find user
+        const user = await Users.findOne({ where: { email: tokenData.email } });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Hash new password and update
+        const password_hash = await hashPassword(password);
+        await user.update({ password_hash });
+
+        // Delete token after use
+        resetTokens.delete(token);
+
+        res.status(200).json({ message: "Password reset successful" });
+
+    } catch (e) {
+        res.status(500).json({ message: e.message });
+    }
+};
