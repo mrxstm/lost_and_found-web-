@@ -1,6 +1,6 @@
 import ItemsGrid from "./ItemsGrid";
 
-function ReportStateHandler({ loading, error, items }) {
+function ReportStateHandler({ loading, error, items, onDelete }) {
     {/* state handling (loading error success) */}
 
 
@@ -16,7 +16,7 @@ function ReportStateHandler({ loading, error, items }) {
 
     //success
     if (!loading && !error) {
-        return <ItemsGrid items={items} />;
+        return <ItemsGrid items={items} onDelete={onDelete} />;
     }
 
     return null;
