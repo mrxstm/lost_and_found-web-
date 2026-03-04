@@ -7,7 +7,7 @@ function ItemList({ items, loading, error }) {
     const totalItems = items.length;
 
     return(
-        <div className="mt-8 bg-[#111827] ml-16">
+        <div className="mt-8 bg-[#111827] ml-12">
             <h3 className="text-[#9ca3af] text-xs">Found <b className="text-white text-xs">{totalItems}</b> items</h3>
 
               {/* Loading state */}
@@ -27,7 +27,7 @@ function ItemList({ items, loading, error }) {
             
                 {/* Success state */}
                {!loading && !error && (
-                    <div className="mt-8 px-4 sm:px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 justify-items-center">
+                    <div className="mt-8  grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 gap-y-12 justify-items-center">
                         {items.map((item) => (
                             <ProductCard
                                 key={item.id}
