@@ -118,7 +118,7 @@ function SignupPopup({ close, openLogin }) {
                             onClick={() => setShowPassword(prev => !prev)}
                             className="absolute right-2 top-1/2 -translate-y-1/2 text-[#9ca3af] hover:text-white"
                         >
-                            {showPassword ? <EyeOff size={11} /> : <Eye size={11} />}
+                            {showPassword ? <Eye size={11} /> : <EyeOff size={11} />}
                         </button>
                     </div>
                     {errors.password && <p className="text-red-500 text-[9px]">{errors.password.message}</p>}
@@ -155,7 +155,7 @@ function SignupPopup({ close, openLogin }) {
                             {colleges.length === 0 ? "Loading colleges..." : "Select a college"}
                         </option>
                         {colleges.map(col => (
-                            <option key={col.id} value={col.id}>
+                            <option key={col.name} value={col.name}>
                                 {col.name}
                             </option>
                         ))}
