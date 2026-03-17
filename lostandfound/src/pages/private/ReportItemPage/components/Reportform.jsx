@@ -3,7 +3,7 @@ import { itemSchema } from "../../../../schema/item.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useApi from "../../../../hooks/useAPI";
 import imagepng from "../../../../assets/images/image-.png";
-import calendar from "../../../../assets/images/Calendar.png";
+import calendar from "../../../../assets/images/calendar.png";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useEffect, useState } from "react";
