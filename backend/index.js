@@ -1,3 +1,6 @@
+import dotenv from "dotenv"
+dotenv.config();
+
 import express from "express";
 import { connection } from "./db.js";
 import userRoute from "./routes/userRoute.js";
@@ -9,14 +12,12 @@ import statsRoute from "./routes/statRoute.js"
 import collegeRoute from "./routes/collegeRoute.js";
 import claimRoute from "./routes/claimRoute.js";
 import cookieParser from 'cookie-parser';
-import dotenv from "dotenv"
 import cors from "cors";
 import { createUploadsFolders } from "./utils/helper.js";
 
 
 
 
-dotenv.config();
 
 
 const app = express();
