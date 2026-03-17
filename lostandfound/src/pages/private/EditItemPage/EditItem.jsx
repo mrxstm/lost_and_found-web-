@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import imagepng from "../../../assets/images/image-.png";
-import calendar from "../../../assets/images/Calendar.png";
+import calendar from "../../../assets/images/calendar.png";
 
 const editItemSchema = z.object({
     itemname:    z.string().min(3, { message: "Name must be at least 3 characters" }),
