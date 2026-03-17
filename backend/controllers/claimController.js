@@ -1,7 +1,5 @@
 import { Claim, Item, Users } from "../models/association.js";
 import { Op } from "sequelize";
-import path from "path";
-import fs from "fs";
 
 export const submitClaim = async (req, res) => {
     try {
@@ -31,7 +29,7 @@ export const submitClaim = async (req, res) => {
             return res.status(400).json({ message: "You have already submitted a claim for this item" });
         }
 
-        const proof_image = req.file ? `/uploads/proofs/${req.file.filename}` : null;
+        const proof_image = req.file ? req.file.path : null;
 
         const claim = await Claim.create({
             item_id,

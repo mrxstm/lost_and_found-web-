@@ -194,7 +194,7 @@ export const editProfile = async (req, res) => {
     let profile_pic_url = user.profile_pic_url; // keep old by default
 
     if (req.file) {
-      profile_pic_url = `/uploads/profiles/${req.file.filename}`;
+      profile_pic_url = req.file.path;
     }
 
     
@@ -207,7 +207,7 @@ export const editProfile = async (req, res) => {
     if (gender !== undefined) updateFields.gender = gender;
 
     if (req.file) {
-      updateFields.profile_pic_url = `/uploads/profiles/${req.file.filename}`;
+      updateFields.profile_pic_url = req.file.path;
     }
 
     await user.update(updateFields);

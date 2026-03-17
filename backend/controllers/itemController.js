@@ -1,7 +1,6 @@
 import { Op, Sequelize } from "sequelize";
 import { Item, Location, Users, College } from "../models/association.js";
-import fs from "fs";
-import path from "path";
+
 
 
 export const getAllItem = async (req, res) => {
@@ -112,19 +111,11 @@ export const updateItem = async (req, res) => {
         // Delete removed images from disk
         if (removed_images) {
             const toRemove = Array.isArray(removed_images) ? removed_images : [removed_images];
-            toRemove.forEach((imgPath) => {
-                const fullPath = path.join(process.cwd(), imgPath);
-                if (fs.existsSync(fullPath)) {
-                    fs.unlinkSync(fullPath);
-                }
-            });
-
-            // Remove from existing image_urls
             item.image_urls = item.image_urls.filter(url => !toRemove.includes(url));
         }
 
         // Add newly uploaded images
-        const newImageUrls = req.files?.map(file => `/uploads/items/${file.filename}`) || [];
+        const newImageUrls = req.files?.map(file => file.path) || [];
         const updatedImageUrls = [...item.image_urls, ...newImageUrls];
 
         await item.update({
@@ -164,7 +155,7 @@ export const addItemReport = async(req,res) => {
         const college_id = req.user.college_id;
 
         // req.files contains uploaded files
-        const image_urls = req.files?.map((file) => `/uploads/items/${file.filename}`) || [];
+        const image_urls = req.files?.map((file) => file.path) || [];
 
         //validations
         if(!itemName || itemName.trim() === "") return res.status(400).json({message: "Item name is required"});
@@ -303,15 +294,6 @@ export const deleteItem = async (req, res) => {
             return res.status(403).json({ message: "You are not authorized to delete this item" });
         }
 
-        // delete image files from disk if they exist
-        if (item.image_urls && item.image_urls.length > 0) {
-            item.image_urls.forEach((imgPath) => {
-                const fullPath = path.join(process.cwd(), imgPath);
-                if (fs.existsSync(fullPath)) {
-                    fs.unlinkSync(fullPath);
-                }
-            });
-        }
 
         await item.destroy();
 
