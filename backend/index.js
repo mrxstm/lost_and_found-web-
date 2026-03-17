@@ -13,7 +13,6 @@ import collegeRoute from "./routes/collegeRoute.js";
 import claimRoute from "./routes/claimRoute.js";
 import cookieParser from 'cookie-parser';
 import cors from "cors";
-import { createUploadsFolders } from "./utils/helper.js";
 
 
 
@@ -24,7 +23,6 @@ const app = express();
 const port = 5000;
 
 connection();
-createUploadsFolders();
 
 //middlewares
 app.use(express.json());
