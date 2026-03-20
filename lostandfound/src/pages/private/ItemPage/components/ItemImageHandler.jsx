@@ -5,7 +5,7 @@ function ItemImageHandler({ itemImage }) {
 
     useEffect(() => {
         if (itemImage && itemImage.length > 0) {
-            setMainImage(`http://localhost:5000${itemImage[0]}`);
+            setMainImage(itemImage[0]);
         }
     }, [itemImage]);
 
@@ -22,10 +22,10 @@ function ItemImageHandler({ itemImage }) {
                 {itemImage.map((img, idx) => (
                     <img
                         key={idx}
-                        src={`http://localhost:5000${img}`}
+                        src={img}
                         alt=""
-                        className={`w-full h-14 sm:h-20 lg:h-24 object-cover rounded-xl cursor-pointer hover:scale-105 transition-transform duration-200 ${mainImage === `http://localhost:5000${img}` ? "border-4 border-[#5DCEA6]" : ""}`}
-                        onClick={() => setMainImage(`http://localhost:5000${img}`)}
+                        className={`w-full h-14 sm:h-20 lg:h-24 object-cover rounded-xl cursor-pointer hover:scale-105 transition-transform duration-200 ${mainImage === img ? "border-4 border-[#5DCEA6]" : ""}`}
+                        onClick={() => setMainImage(img)}
                     />
                 ))}
             </div>

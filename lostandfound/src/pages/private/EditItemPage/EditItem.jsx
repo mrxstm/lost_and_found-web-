@@ -236,7 +236,7 @@ function EditItem() {
                                 {existingImages.map((url, i) => (
                                     <div key={`existing-${i}`} className="relative w-10 h-10 sm:w-14 sm:h-14">
                                         <img
-                                            src={`http://localhost:5000${url}`}
+                                            src={url}
                                             alt="existing"
                                             className="w-full h-full object-cover rounded"
                                         />

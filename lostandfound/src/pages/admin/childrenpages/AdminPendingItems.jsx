@@ -58,7 +58,7 @@ function AdminPendingItems() {
                     {items.map(item => (
                         <div key={item.id} className="bg-[#1F2937] rounded-xl shadow-sm w-[200px] sm:w-[200px]">
                             <img
-                                src={`http://localhost:5000${item.image_urls?.[0]}`}
+                                src={item.image_urls?.[0]}
                                 alt={item.itemName}
                                 className="h-24 sm:h-28 lg:h-36 w-full object-cover object-center rounded-t-xl"
                             />

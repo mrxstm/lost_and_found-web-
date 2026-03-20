@@ -111,10 +111,10 @@ function AdminClaims() {
                                     <td className="px-6 py-4">
                                         {claim.proof_image ? (
                                             <img
-                                                src={`http://localhost:5000${claim.proof_image}`}
+                                                src={claim.proof_image}
                                                 alt="proof"
                                                 className="w-12 h-12 object-cover rounded-lg cursor-pointer"
-                                                onClick={() => window.open(`http://localhost:5000${claim.proof_image}`, "_blank")}
+                                                onClick={() => window.open(claim.proof_image, "_blank")}
                                             />
                                         ) : (
                                             <span className="text-[#9ca3af] text-xs">No proof</span>

@@ -117,7 +117,7 @@ function MyClaimsPage() {
                                             <p className="text-[#9ca3af] text-[9px] sm:text-xs max-w-lg">{claim.message}</p>
                                             {claim.proof_image && (
                                                 <img
-                                                    src={`http://localhost:5000${claim.proof_image}`}
+                                                    src={claim.proof_image}
                                                     alt="proof"
                                                     className="w-8 h-8 sm:w-12 sm:h-12 object-cover rounded-lg mt-1"
                                                 />
@@ -171,7 +171,7 @@ function MyClaimsPage() {
                                             </p>
                                             {claim.proof_image && (
                                                 <img
-                                                    src={`http://localhost:5000${claim.proof_image}`}
+                                                    src={claim.proof_image}
                                                     alt="proof"
                                                     className="w-8 h-8 sm:w-12 sm:h-12 object-cover rounded-lg mt-1"
                                                 />

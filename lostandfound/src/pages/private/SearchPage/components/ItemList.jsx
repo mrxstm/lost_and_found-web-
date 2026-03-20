@@ -33,7 +33,7 @@ function ItemList({ items, loading, error }) {
                                 key={item.id}
                                 id={item.id}
                                 item_name={item.itemName}
-                                image={`http://localhost:5000${item.image_urls[0]}`}
+                                image={item.image_urls[0]}
                                 location={item.Location?.name}
                                 date={item.date?.substring(0, 10)}
                                 fromPage="search"
