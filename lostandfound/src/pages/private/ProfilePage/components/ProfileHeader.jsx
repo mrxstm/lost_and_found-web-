@@ -49,7 +49,7 @@ function ProfileHeader({ avatar, full_name, college_name, setUser }) {
                     selectedFile
                         ? URL.createObjectURL(selectedFile)
                         : avatar
-                        ? `http://localhost:5000${avatar}`
+                        ? avatar
                         : placeholder
                 }
                 alt="Profile"
