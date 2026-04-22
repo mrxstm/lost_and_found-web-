@@ -20,6 +20,11 @@ import cors from "cors";
 
 
 const app = express();
+app.use(cors({
+    origin: process.env.FRONTEND_URL, 
+    credentials: true              
+}));
+
 const port = 5000;
 
 connection();
@@ -32,10 +37,6 @@ app.use('/uploads/items', express.static('uploads/items'));
 app.use('/uploads/profiles', express.static('uploads/profiles'));
 app.use("/uploads/proofs", express.static("uploads/proofs"));
 
-app.use(cors({
-    origin: process.env.FRONTEND_URL, 
-    credentials: true              
-}));
 
 //routes
 app.use("/api/user", userRoute)
