@@ -22,6 +22,7 @@ Each institution gets its own isolated space: its own students, admins, location
 - 👤 **User profile management**
 - 🖼️ **Image upload support** for item photos
 - 📱 **Responsive interface** across devices
+- 🖼️ Cloud-based image upload & storage using Cloudinary (fast CDN image delivery)
 
 ---
 
@@ -46,7 +47,7 @@ No need to register — log in with these demo accounts to explore both sides of
 | **Backend** | Node.js, Express.js |
 | **Database** | PostgreSQL, Sequelize ORM |
 | **Auth & Security** | JSON Web Token (JWT), bcrypt |
-| **File Upload & Storage** | Multer (local storage) |
+| **File Upload & Storage** | File Upload & Storage: Multer + Cloudinary (cloud-based image storage & CDN) |
 | **Deployment** | Vercel (frontend), Render (backend + database) |
 
 ---
@@ -121,6 +122,9 @@ DATABASE_URL=
 JWT_SECRET=
 EMAIL_USER=
 EMAIL_PASS=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ```
 
 **Frontend** (`lostandfound/.env`)
@@ -130,6 +134,24 @@ VITE_API_URL=
 ```
 
 ---
+
+☁️ Cloudinary Integration
+
+This project uses Cloudinary for image storage instead of local file uploads.
+
+Why Cloudinary?
+Faster image delivery via CDN
+No local storage dependency
+Scalable for production
+Automatic image optimization
+Supports multiple images per item (1–4 images)
+Upload Flow
+Frontend → Express API → Multer → Cloudinary → Store URL in PostgreSQL
+Stored Data Example
+image_urls: [
+  "https://res.cloudinary.com/.../item1.jpg",
+  "https://res.cloudinary.com/.../item2.jpg"
+]
 
 ## 🗺️ Roadmap
 
